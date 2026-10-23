@@ -18,3 +18,9 @@ body {
 .map {
   height: 100%;
 }
+
+.tip-type {
+  display: block;
+  color: #545e58;
+  font-size: 0.72rem;
+}

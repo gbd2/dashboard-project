@@ -1,4 +1,5 @@
 import { createTractLayer } from './tracts.js';
+import { createStoreLayers } from './stores.js';
 
 const map = L.map('map', {
   maxBounds: [[28.9, -96.4], [30.6, -94.4]],
@@ -15,14 +16,19 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_L
 map.createPane('maskPane');
 map.getPane('maskPane').style.zIndex = 420;
 map.getPane('maskPane').style.pointerEvents = 'none';
+map.createPane('storePane');
+map.getPane('storePane').style.zIndex = 450;
 
-const [tracts, mask, boundary] = await Promise.all([
+const [tracts, stores, mask, boundary] = await Promise.all([
   fetch('data/tracts.geojson').then((r) => r.json()),
+  fetch('data/stores.geojson').then((r) => r.json()),
   fetch('data/harris-mask.geojson').then((r) => r.json()),
   fetch('data/harris-boundary.geojson').then((r) => r.json()),
 ]);
 
 createTractLayer(tracts).addTo(map);
+const storeLayers = createStoreLayers(stores);
+storeLayers.grocery.addTo(map);
 
 const maskRenderer = L.svg({ padding: 3, pane: 'maskPane' });
 
