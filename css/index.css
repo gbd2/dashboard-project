@@ -24,3 +24,88 @@ body {
   color: #545e58;
   font-size: 0.72rem;
 }
+
+.map-wrap {
+  position: relative;
+  min-height: 0;
+}
+
+.map {
+  height: 100%;
+}
+
+.layer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.layer-toggle {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.25rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.layer-toggle input {
+  margin: 0;
+}
+
+.layer-count {
+  color: #545e58;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.swatch {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.swatch.dot {
+  border: 1.5px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgb(18 26 22 / 25%);
+}
+
+.swatch.fill {
+  border: 1px solid rgb(18 26 22 / 25%);
+  border-radius: 0.15rem;
+}
+
+.swatch[data-cat='grocery'] { background-color: #1f7a4d; }
+.swatch[data-cat='small'] { background-color: #2f8f9d; }
+.swatch[data-cat='dollar'] { background-color: #b0457b; }
+.swatch[data-cat='convenience'] { background-color: #8a8f96; }
+
+.legend {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 1.75rem;
+  z-index: 500;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #d6dad3;
+  border-radius: 0.5rem;
+  background-color: rgb(255 255 255 / 94%);
+  font-size: 0.78rem;
+}
+
+.legend-title {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.15rem 0 0;
+}

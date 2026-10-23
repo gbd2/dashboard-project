@@ -35,8 +35,49 @@
             <section class="panel" role="tabpanel" hidden>
                 <h2>Test a recruitment plan</h2>
             </section>
+
+            <section class="panel" aria-labelledby="layers-heading">
+                <h2>Map layers</h2>
+                <ul class="layer-list">
+                    <li>
+                        <label class="layer-toggle">
+                            <input type="checkbox" name="layer" value="grocery" checked>
+                            <span class="swatch dot" data-cat="grocery"></span>
+                            <span class="layer-name">Grocery stores</span>
+                            <span class="layer-count" data-count="grocery"></span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="layer-toggle">
+                            <input type="checkbox" name="layer" value="small">
+                            <span class="swatch dot" data-cat="small"></span>
+                            <span class="layer-name">Small grocers</span>
+                            <span class="layer-count" data-count="small"></span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="layer-toggle">
+                            <input type="checkbox" name="layer" value="dollar">
+                            <span class="swatch dot" data-cat="dollar"></span>
+                            <span class="layer-name">Dollar stores and pharmacies</span>
+                            <span class="layer-count" data-count="dollar"></span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="layer-toggle">
+                            <input type="checkbox" name="layer" value="convenience">
+                            <span class="swatch dot" data-cat="convenience"></span>
+                            <span class="layer-name">Convenience stores</span>
+                            <span class="layer-count" data-count="convenience"></span>
+                        </label>
+                    </li>
+                </ul>
+            </section>
         </aside>
-        <div id="map" class="map"></div>    
+        <div class="map-wrap">
+            <div id="map" class="map"></div>
+            <div class="legend" id="legend" aria-hidden="true"></div>
+        </div>  
     </main>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="js/main.js"></script>

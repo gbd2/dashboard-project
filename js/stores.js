@@ -39,4 +39,13 @@ function createStoreLayers(stores) {
   return layers;
 }
 
-export { createStoreLayers };
+function countStores(stores) {
+  const counts = {};
+  for (const feature of stores.features) {
+    const { cat } = feature.properties;
+    counts[cat] = (counts[cat] || 0) + 1;
+  }
+  return counts;
+}
+
+export { createStoreLayers, countStores, STORE_COLORS, STORE_LABELS };

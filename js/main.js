@@ -1,5 +1,6 @@
 import { createTractLayer } from './tracts.js';
-import { createStoreLayers } from './stores.js';
+import { createStoreLayers, countStores } from './stores.js';
+import { renderLegend } from './legend.js';
 
 const map = L.map('map', {
   maxBounds: [[28.9, -96.4], [30.6, -94.4]],
@@ -47,3 +48,22 @@ const county = L.geoJSON(boundary, {
 }).addTo(map);
 
 map.fitBounds(county.getBounds(), { padding: [8, 8] });
+
+const counts = countStores(stores);
+for (const el of document.querySelectorAll('[data-count]')) {
+  el.textContent = (counts[el.dataset.count] || 0).toLocaleString('en-US');
+}
+
+for (const input of document.querySelectorAll('input[name="layer"]')) {
+  const layer = storeLayers[input.value];
+  if (input.checked) { layer.addTo(map); }
+  input.addEventListener('change', () => {
+    if (input.checked) {
+      layer.addTo(map);
+    } else {
+      layer.remove();
+    }
+  });
+}
+
+renderLegend(document.getElementById('legend'));

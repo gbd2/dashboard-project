@@ -32,4 +32,4 @@ function createTractLayer(tracts) {
   });
 }
 
-export { createTractLayer };
+export { FILLS, createTractLayer };
