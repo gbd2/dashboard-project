@@ -1,3 +1,5 @@
+import { createTractLayer } from './tracts.js';
+
 const map = L.map('map', {
   maxBounds: [[28.9, -96.4], [30.6, -94.4]],
   maxBoundsViscosity: 1.0,
@@ -11,11 +13,16 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_L
 }).addTo(map);
 
 map.createPane('maskPane');
+map.getPane('maskPane').style.zIndex = 420;
+map.getPane('maskPane').style.pointerEvents = 'none';
 
-const [mask, boundary] = await Promise.all([
+const [tracts, mask, boundary] = await Promise.all([
+  fetch('data/tracts.geojson').then((r) => r.json()),
   fetch('data/harris-mask.geojson').then((r) => r.json()),
   fetch('data/harris-boundary.geojson').then((r) => r.json()),
 ]);
+
+createTractLayer(tracts).addTo(map);
 
 const maskRenderer = L.svg({ padding: 3, pane: 'maskPane' });
 
