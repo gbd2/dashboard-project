@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fixing the Houston Grocery Gap</title>
     <meta name="description" content="A decision support tool for deciding where Houston should recruit new grocery stores.">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%231f7a4d'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,17 +13,32 @@
 </head>
 <body>
     <main class="app-content">
-        <header class="title">
-        <h1>Where should Houston's next grocery stores go?</h1>
-        <p class="lede">This decision support tool was created for city staff deciding where to spend grocer recruitment incentives. Find where residents are farthest from groceries, rank the places a new store would perform well and impact the community, then test different plans given budget constraints.</p>
-      </header>
+        <aside class="rail" aria-label="controls">
+            <header class="rail-header">
+                <h1>Where should Houston's next grocery stores go?</h1>
+            </header>
 
-      <div class="tabs" role="tablist" aria-label="steps">
-        <button class="tab">Find gaps</button>
-        <button class="tab">Rank locations</button>
-        <button class="tab">Test plans</button>
-      </div>
+            <div class="tabs" role="tablist" aria-label="steps">
+                <button class="tab" type="button">Find gaps</button>
+                <button class="tab" type="button">Rank locations</button>
+                <button class="tab" type="button">Test plans</button>
+            </div>
 
+            <section class="panel" role="tabpanel">
+                <h2 id="definition-heading">What do we count as a grocery store?</h2>
+            </section>
+
+            <section class="panel" role="tabpanel" hidden>
+                <h2>What is important when ranking new locations?</h2>
+            </section>
+
+            <section class="panel" role="tabpanel" hidden>
+                <h2>Test a recruitment plan</h2>
+            </section>
+        </aside>
     </main>
+    <div id="map" class="map"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
