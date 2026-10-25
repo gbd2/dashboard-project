@@ -208,3 +208,18 @@ body {
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
+
+.sources summary {
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.source-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding-left: 1rem;
+  font-size: 0.82rem;
+}
