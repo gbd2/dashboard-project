@@ -15,10 +15,6 @@ body {
   overflow-y: auto;
 }
 
-.map {
-  height: 100%;
-}
-
 .tip-type {
   display: block;
   color: #545e58;
@@ -185,4 +181,30 @@ body {
   margin: 0.35rem 0 0;
   color: #545e58;
   font-size: 0.82rem;
+}
+
+
+.profile-name {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.35rem 1rem;
+  margin: 0;
+}
+
+.facts dt {
+  color: #545e58;
+  font-size: 0.85rem;
+}
+
+.facts dd {
+  margin: 0;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
 }

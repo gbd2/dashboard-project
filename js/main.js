@@ -3,9 +3,11 @@ import { createStoreLayers, countStores } from './stores.js';
 import { renderLegend } from './legend.js';
 import { renderHeadline } from './headline.js';
 import { int } from './format.js';
+import { showProfile } from './profile.js';
 
 const state = {
   definition: 'grocery',
+  selected: null
 };
 
 const NOTES = {
@@ -37,8 +39,9 @@ const [tracts, stores, mask, boundary] = await Promise.all([
   fetch('data/harris-mask.geojson').then((r) => r.json()),
   fetch('data/harris-boundary.geojson').then((r) => r.json()),
 ]);
+const tractsById = new Map(tracts.features.map((f) => [f.properties.geoid, f.properties]));
 
-const tractLayer = createTractLayer(tracts, state);
+const tractLayer = createTractLayer(tracts, state, selectTract);
 tractLayer.addTo(map);
 const storeLayers = createStoreLayers(stores);
 storeLayers.grocery.addTo(map);
@@ -81,6 +84,16 @@ for (const input of document.querySelectorAll('input[name="layer"]')) {
 
 const headlineStats = { grocery: summarize(tracts, 'grocery'), usda: summarize(tracts, 'usda') };
 
+function refreshProfile() {
+  if (state.selected) { showProfile(tractsById.get(state.selected), state.definition); }
+}
+
+function selectTract(geoid) {
+  state.selected = geoid;
+  tractLayer.restyle();
+  refreshProfile();
+}
+
 function updateHeadline() {
   renderHeadline(document.getElementById('headline'), headlineStats, state.definition);
   document.getElementById('definition-note').textContent = NOTES[state.definition];
@@ -95,5 +108,6 @@ for (const input of document.querySelectorAll('input[name="definition"]')) {
 }
 
 updateHeadline();
+refreshProfile();
 
 renderLegend(document.getElementById('legend'));

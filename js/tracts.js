@@ -21,25 +21,31 @@ function accessClass(p, definition) {
 
 function tractStyle(p, state) {
   const cls = accessClass(p, state.definition);
+  const selected = p.geoid === state.selected;
   return {
-    color: 'rgb(18 26 22 / 22%)',
-    weight: 0.5,
+    color: selected ? '#1a211d' : 'rgb(18 26 22 / 22%)',
+    weight: selected ? 2.5 : 0.5,
     fillColor: FILLS[cls],
     fillOpacity: cls === 'ok' ? 0.35 : 0.78,
   };
 }
 
-function createTractLayer(tracts, state) {
+function createTractLayer(tracts, state, onSelect) {
   const layer = L.geoJSON(tracts, {
     style: (f) => tractStyle(f.properties, state),
     onEachFeature: (f, l) => {
       l.bindTooltip(`Tract ${f.properties.name}`, { sticky: true });
+      l.on('click', () => onSelect(f.properties.geoid));
     },
   });
 
-  // Recolor in place when the definition changes instead of rebuilding the layer.
+  // Recolor when the definition or selection changes instead of
+  // rebuilding the layer.
   layer.restyle = () => {
-    layer.eachLayer((l) => l.setStyle(tractStyle(l.feature.properties, state)));
+    layer.eachLayer((l) => {
+      l.setStyle(tractStyle(l.feature.properties, state));
+      if (l.feature.properties.geoid === state.selected) { l.bringToFront(); }
+    });
   };
 
   return layer;
