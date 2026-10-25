@@ -13,8 +13,7 @@ const STORE_LABELS = {
 };
 
 function createStoreLayers(stores) {
-  // Canvas draws dots much faster than having a SVG element per dot.
-  const renderer = L.canvas({ pane: 'storePane', padding: 0.3 });
+  const renderer = L.svg({ pane: 'storePane' });
   const layers = {};
   for (const cat of Object.keys(STORE_COLORS)) {
     layers[cat] = L.layerGroup();
