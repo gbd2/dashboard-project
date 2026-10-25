@@ -109,3 +109,80 @@ body {
   gap: 0.45rem;
   margin: 0.15rem 0 0;
 }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.note {
+  margin: 0.75rem 0 0;
+  color: #545e58;
+  font-size: 0.85rem;
+}
+
+.choice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choice-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+  cursor: pointer;
+}
+
+.choice-row input {
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  margin: 0.2rem 0 0;
+}
+
+.choice-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.choice-name {
+  font-weight: 700;
+}
+
+.choice-meta {
+  color: #545e58;
+  font-size: 0.8rem;
+}
+
+.headline {
+  margin-top: 1rem;
+}
+
+.stat-number {
+  margin: 0;
+  color: #c4441c;
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  margin: 0.3rem 0 0;
+  font-weight: 600;
+}
+
+.stat-sub {
+  margin: 0.35rem 0 0;
+  color: #545e58;
+  font-size: 0.82rem;
+}

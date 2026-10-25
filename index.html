@@ -26,6 +26,27 @@
 
             <section class="panel" role="tabpanel">
                 <h2 id="definition-heading">What do we count as a grocery store?</h2>
+                <fieldset class="choice" aria-labelledby="definition-heading">
+                    <legend class="visually-hidden">Food access definition</legend>
+                    <label class="choice-row">
+                        <input type="radio" name="definition" value="grocery" checked>
+                        <span class="choice-text">
+                            <span class="choice-name">Grocery stores only</span>
+                            <span class="choice-meta">Supermarkets, supercenters and large grocers, <span data-count="grocery">726</span> in and near the county</span>
+                        </span>
+                    </label>
+                    <label class="choice-row">
+                        <input type="radio" name="definition" value="usda">
+                        <span class="choice-text">
+                            <span class="choice-name">Any SNAP store</span>
+                            <span class="choice-meta">Adds convenience, dollar and drug stores, <span data-count="snap">4,224</span> in all</span>
+                        </span>
+                    </label>
+                </fieldset>
+
+                <div class="headline" id="headline" aria-live="polite"></div>
+
+                <p class="note" id="definition-note"></p>
             </section>
 
             <section class="panel" role="tabpanel" hidden>

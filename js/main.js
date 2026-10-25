@@ -1,6 +1,17 @@
-import { createTractLayer } from './tracts.js';
+import { createTractLayer, summarize } from './tracts.js';
 import { createStoreLayers, countStores } from './stores.js';
 import { renderLegend } from './legend.js';
+import { renderHeadline } from './headline.js';
+import { int } from './format.js';
+
+const state = {
+  definition: 'grocery',
+};
+
+const NOTES = {
+  grocery: "These are the store types USDA's own Large Retailer Access Map counts.",
+  usda: "This is how USDA's new 2025 map counts access. By that measure, a gas station is food access.",
+};
 
 const map = L.map('map', {
   maxBounds: [[28.9, -96.4], [30.6, -94.4]],
@@ -27,7 +38,8 @@ const [tracts, stores, mask, boundary] = await Promise.all([
   fetch('data/harris-boundary.geojson').then((r) => r.json()),
 ]);
 
-createTractLayer(tracts).addTo(map);
+const tractLayer = createTractLayer(tracts, state);
+tractLayer.addTo(map);
 const storeLayers = createStoreLayers(stores);
 storeLayers.grocery.addTo(map);
 
@@ -50,8 +62,9 @@ const county = L.geoJSON(boundary, {
 map.fitBounds(county.getBounds(), { padding: [8, 8] });
 
 const counts = countStores(stores);
+counts.snap = counts.grocery + counts.small + counts.dollar + counts.convenience;
 for (const el of document.querySelectorAll('[data-count]')) {
-  el.textContent = (counts[el.dataset.count] || 0).toLocaleString('en-US');
+  el.textContent = int(counts[el.dataset.count] || 0);
 }
 
 for (const input of document.querySelectorAll('input[name="layer"]')) {
@@ -65,5 +78,22 @@ for (const input of document.querySelectorAll('input[name="layer"]')) {
     }
   });
 }
+
+const headlineStats = { grocery: summarize(tracts, 'grocery'), usda: summarize(tracts, 'usda') };
+
+function updateHeadline() {
+  renderHeadline(document.getElementById('headline'), headlineStats, state.definition);
+  document.getElementById('definition-note').textContent = NOTES[state.definition];
+}
+
+for (const input of document.querySelectorAll('input[name="definition"]')) {
+  input.addEventListener('change', () => {
+    state.definition = input.value;
+    tractLayer.restyle();
+    updateHeadline();
+  });
+}
+
+updateHeadline();
 
 renderLegend(document.getElementById('legend'));

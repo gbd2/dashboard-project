@@ -6,15 +6,21 @@ const FILLS = {
   ok: '#f7f8f5',
 };
 
+const DEFINITIONS = {
+  grocery: { lila: 'lila_grocery', la: 'la_grocery', far: 'far_grocery' },
+  usda: { lila: 'lila_usda', la: 'la_usda', far: 'far_any' },
+};
+
 // lila = low income and low access (a food desert). la = low access only.
-function accessClass(p) {
-  if (p.lila_grocery) { return 'lila'; }
-  if (p.la_grocery) { return 'la'; }
+function accessClass(p, definition) {
+  const fields = DEFINITIONS[definition];
+  if (p[fields.lila]) { return 'lila'; }
+  if (p[fields.la]) { return 'la'; }
   return 'ok';
 }
 
-function tractStyle(p) {
-  const cls = accessClass(p);
+function tractStyle(p, state) {
+  const cls = accessClass(p, state.definition);
   return {
     color: 'rgb(18 26 22 / 22%)',
     weight: 0.5,
@@ -23,13 +29,36 @@ function tractStyle(p) {
   };
 }
 
-function createTractLayer(tracts) {
-  return L.geoJSON(tracts, {
-    style: (f) => tractStyle(f.properties),
-    onEachFeature: (f, layer) => {
-      layer.bindTooltip(`Tract ${f.properties.name}`, { sticky: true });
+function createTractLayer(tracts, state) {
+  const layer = L.geoJSON(tracts, {
+    style: (f) => tractStyle(f.properties, state),
+    onEachFeature: (f, l) => {
+      l.bindTooltip(`Tract ${f.properties.name}`, { sticky: true });
     },
   });
+
+  // Recolor in place when the definition changes instead of rebuilding the layer.
+  layer.restyle = () => {
+    layer.eachLayer((l) => l.setStyle(tractStyle(l.feature.properties, state)));
+  };
+
+  return layer;
 }
 
-export { FILLS, createTractLayer };
+// Headline numbers (desert tracts, population, and residents beyond reach of a store)
+function summarize(tracts, definition) {
+  const fields = DEFINITIONS[definition];
+  let count = 0;
+  let residents = 0;
+  let farTotal = 0;
+  for (const { properties: p } of tracts.features) {
+    farTotal += p[fields.far];
+    if (p[fields.lila]) {
+      count += 1;
+      residents += p.pop;
+    }
+  }
+  return { count, residents, farTotal };
+}
+
+export { FILLS, createTractLayer, summarize, accessClass};
