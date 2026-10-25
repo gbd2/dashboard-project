@@ -4,11 +4,13 @@ import { renderLegend } from './legend.js';
 import { renderHeadline } from './headline.js';
 import { int } from './format.js';
 import { showProfile } from './profile.js';
+import { createRanking } from './rank.js';
 
 const state = {
   mode: 'access',
   definition: 'grocery',
   selected: null,
+  weights: { need: 3, viability: 3, leverage: 3 },
 };
 
 const NOTES = {
@@ -28,6 +30,8 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_L
   attribution: 'Tiles &copy; <a href="https://www.esri.com">Esri</a>, HERE, Garmin, &copy; OpenStreetMap contributors',
 }).addTo(map);
 
+map.createPane('rankPane');
+map.getPane('rankPane').style.zIndex = 460;
 map.createPane('maskPane');
 map.getPane('maskPane').style.zIndex = 420;
 map.getPane('maskPane').style.pointerEvents = 'none';
@@ -40,6 +44,7 @@ const [tracts, stores, mask, boundary] = await Promise.all([
   fetch('data/harris-mask.geojson').then((r) => r.json()),
   fetch('data/harris-boundary.geojson').then((r) => r.json()),
 ]);
+const legendEl = document.getElementById('legend');
 const tractsById = new Map(tracts.features.map((f) => [f.properties.geoid, f.properties]));
 
 const tractLayer = createTractLayer(tracts, state, selectTract);
@@ -105,8 +110,19 @@ for (const input of document.querySelectorAll('input[name="definition"]')) {
     state.definition = input.value;
     tractLayer.restyle();
     updateHeadline();
+    refreshProfile();
   });
 }
+
+const ranking = createRanking({
+  map,
+  tracts,
+  state,
+  onSelect: selectTract,
+  onChange: () => {
+    if (state.mode === 'rank') { tractLayer.restyle(); }
+  },
+});
 
 const tabs = [...document.querySelectorAll('[role="tab"]')];
 
@@ -118,6 +134,9 @@ function setMode(tab) {
     document.getElementById(t.getAttribute('aria-controls')).hidden = !active;
   }
   state.mode = { 'tab-rank': 'rank', 'tab-plan': 'plan' }[tab.id] || 'access';
+  ranking.show(state.mode === 'rank');
+  tractLayer.restyle();
+  renderLegend(legendEl, state.mode);
 }
 
 // Left and right arrows move between tabs and wrap around
@@ -134,4 +153,4 @@ tabs.forEach((tab, i) => {
 updateHeadline();
 refreshProfile();
 
-renderLegend(document.getElementById('legend'));
+renderLegend(legendEl, state.mode);

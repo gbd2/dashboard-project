@@ -48,8 +48,39 @@
                 <p class="note" id="definition-note"></p>
             </section>
 
-                        <section class="panel" id="panel-rank" role="tabpanel" aria-labelledby="tab-rank" hidden>
+            <section class="panel" id="panel-rank" role="tabpanel" aria-labelledby="tab-rank" hidden>
                 <h2>What is important when ranking new locations?</h2>
+                <p class="note">Set how much each factor counts. Scores run 0 to 100 and count only grocery stores as food access.</p>
+
+                <div class="weights">
+                    <div class="weight">
+                        <label for="w-need">
+                            <span class="weight-name">Need</span>
+                            <span class="weight-value" id="w-need-value">33%</span>
+                        </label>
+                        <input type="range" id="w-need" min="0" max="5" step="1" value="3" aria-describedby="w-need-help">
+                        <p class="weight-help" id="w-need-help">Residents beyond reach of a grocery store, car-free households among them, and poverty.</p>
+                    </div>
+                    <div class="weight">
+                        <label for="w-viability">
+                            <span class="weight-name">Viability</span>
+                            <span class="weight-value" id="w-viability-value">33%</span>
+                        </label>
+                        <input type="range" id="w-viability" min="0" max="5" step="1" value="3" aria-describedby="w-viability-help">
+                        <p class="weight-help" id="w-viability-help">Grocery spending by unserved residents within 2 miles, the sales a new store could win.</p>
+                    </div>
+                    <div class="weight">
+                        <label for="w-leverage">
+                            <span class="weight-name">Incentives</span>
+                            <span class="weight-value" id="w-leverage-value">33%</span>
+                        </label>
+                        <input type="range" id="w-leverage" min="0" max="5" step="1" value="3" aria-describedby="w-leverage-help">
+                        <p class="weight-help" id="w-leverage-help">Opportunity Zone status: 100 for 2027 nominees, 50 for eligible tracts, 0 otherwise.</p>
+                    </div>
+                </div>
+
+                <h2 class="shortlist-heading">Top 10 sites</h2>
+                <ol class="shortlist" id="shortlist" aria-live="polite"></ol>
             </section>
 
             <section class="panel" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
@@ -107,6 +138,7 @@
                     <li><b>Population data:</b> U.S. Census Bureau, 2020 Census block populations, via TIGERweb.</li>
                     <li><b>Income, poverty and vehicles:</b> American Community Survey 2020 to 2024 5-year estimates, as published in the USDA file above.</li>
                     <li><b>Grocery spending:</b> U.S. Bureau of Labor Statistics, Consumer Expenditure Survey 2024, food at home by income quintile, applied to each tract's households by median family income.</li>
+                    <li><b>Opportunity Zones.</b> Office of the Texas Governor, Economic Development and Tourism, Opportunity Zone 2.0 nominated and eligible tracts, September 2026. Nominations are pending U.S. Treasury certification.</li>
                 </ul>
                 <p class="note">A tract is low access when at least 500 people, or a third of its residents, live more than 1 mile from a store (10 miles in rural tracts), measured from 2020 census block centers. Low income comes from the USDA's definition.</p>
             </details>

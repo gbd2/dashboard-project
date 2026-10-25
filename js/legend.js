@@ -1,12 +1,22 @@
-// Map legend for the tract colors
+// Map legend for whatever the current mode is
 
-import { FILLS } from './tracts.js';
+import { FILLS, SCORE_BREAKS, SCORE_FILLS, UNSCORED } from './tracts.js';
 
 function row(fill, label) {
   return `<p class="legend-row"><span class="swatch fill" style="background-color: ${fill}"></span>${label}</p>`;
 }
 
-function renderLegend(el) {
+function renderLegend(el, mode) {
+  if (mode === 'rank') {
+    const edges = [0, ...SCORE_BREAKS, 100];
+    const rows = SCORE_FILLS.map((fill, i) => row(fill, `${edges[i]} to ${edges[i + 1]}`)).reverse();
+    el.innerHTML = `
+      <p class="legend-title">Site score</p>
+      ${rows.join('')}
+      ${row(UNSCORED, 'Not scored')}
+      <p class="legend-row"><span class="rank-key">1</span>Shortlist pick</p>`;
+    return;
+  }
   el.innerHTML = `
     <p class="legend-title">Census tracts</p>
     ${row(FILLS.lila, 'Low income and low access')}
