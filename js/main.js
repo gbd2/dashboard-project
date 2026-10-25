@@ -6,8 +6,9 @@ import { int } from './format.js';
 import { showProfile } from './profile.js';
 
 const state = {
+  mode: 'access',
   definition: 'grocery',
-  selected: null
+  selected: null,
 };
 
 const NOTES = {
@@ -106,6 +107,29 @@ for (const input of document.querySelectorAll('input[name="definition"]')) {
     updateHeadline();
   });
 }
+
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+
+function setMode(tab) {
+  for (const t of tabs) {
+    const active = t === tab;
+    t.setAttribute('aria-selected', String(active));
+    t.tabIndex = active ? 0 : -1;
+    document.getElementById(t.getAttribute('aria-controls')).hidden = !active;
+  }
+  state.mode = { 'tab-rank': 'rank', 'tab-plan': 'plan' }[tab.id] || 'access';
+}
+
+// Left and right arrows move between tabs and wrap around
+tabs.forEach((tab, i) => {
+  tab.addEventListener('click', () => setMode(tab));
+  tab.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') { return; }
+    const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+    next.focus();
+    setMode(next);
+  });
+});
 
 updateHeadline();
 refreshProfile();

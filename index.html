@@ -18,13 +18,12 @@
                 <h1>Where should Houston's next grocery stores go?</h1>
             </header>
 
-            <div class="tabs" role="tablist" aria-label="steps">
-                <button class="tab" type="button">Find gaps</button>
-                <button class="tab" type="button">Rank locations</button>
-                <button class="tab" type="button">Test plans</button>
+            <div class="tabs" role="tablist" aria-label="Tool steps">
+                <button class="tab" type="button" role="tab" id="tab-access" aria-controls="panel-access" aria-selected="true">Find gaps</button>
+                <button class="tab" type="button" role="tab" id="tab-rank" aria-controls="panel-rank" aria-selected="false" tabindex="-1">Rank locations</button>
+                <button class="tab" type="button" role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="false" tabindex="-1">Test plans</button>
             </div>
-
-            <section class="panel" role="tabpanel">
+            <section class="panel" id="panel-access" role="tabpanel" aria-labelledby="tab-access">
                 <h2 id="definition-heading">What do we count as a grocery store?</h2>
                 <fieldset class="choice" aria-labelledby="definition-heading">
                     <legend class="visually-hidden">Food access definition</legend>
@@ -49,11 +48,11 @@
                 <p class="note" id="definition-note"></p>
             </section>
 
-            <section class="panel" role="tabpanel" hidden>
+                        <section class="panel" id="panel-rank" role="tabpanel" aria-labelledby="tab-rank" hidden>
                 <h2>What is important when ranking new locations?</h2>
             </section>
 
-            <section class="panel" role="tabpanel" hidden>
+            <section class="panel" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
                 <h2>Test a recruitment plan</h2>
             </section>
 
