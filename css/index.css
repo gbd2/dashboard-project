@@ -223,3 +223,41 @@ body {
   padding-left: 1rem;
   font-size: 0.82rem;
 }
+
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  margin: 1rem 0;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  background-color: #e9ebe6;
+}
+
+.tab {
+  padding: 0.5rem 0.25rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background-color: transparent;
+  color: #545e58;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: #1a211d;
+}
+
+.tab[aria-selected='true'] {
+  background-color: #fff;
+  color: #1a211d;
+  box-shadow: 0 1px 2px rgb(18 26 22 / 15%);
+}
+
+.tab:focus-visible {
+  outline: 2px solid #b86e00;
+  outline-offset: 2px;
+}
