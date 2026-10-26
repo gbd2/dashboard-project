@@ -3,6 +3,8 @@
 import { FACTORS, applyScores, shortlist } from './scores.js';
 import { int, dollars } from './format.js';
 
+const SPACING_MI = 2;
+
 function weightShare(weights, factor) {
   const total = FACTORS.reduce((sum, f) => sum + weights[f], 0);
   if (total === 0) { return '0%'; }
@@ -19,12 +21,15 @@ function itemHtml(p, i) {
           <span class="pick-name">Tract ${p.name}</span>
           <span class="pick-score"><span class="visually-hidden">Score </span>${Math.round(p.score)}</span>
         </span>
-        <span class="pick-facts">${int(p.far_grocery)} beyond reach &middot; ${dollars(p.market)} unserved &middot; ${zone}</span>
+        <span class="pick-facts">${int(p.far_grocery)} beyond reach, ${dollars(p.market)} unserved, ${zone}</span>
       </button>
     </li>`;
 }
 
+
 function createRanking({ map, tracts, state, onSelect, onChange }) {
+  const spacingEl = document.getElementById('opt-spacing');
+  const desertsEl = document.getElementById('opt-deserts');
   const listEl = document.getElementById('shortlist');
   const markers = L.layerGroup();
   let picks = [];
@@ -55,7 +60,7 @@ function createRanking({ map, tracts, state, onSelect, onChange }) {
   function update() {
     readWeights();
     applyScores(tracts, state.weights);
-    picks = shortlist(tracts, 10);
+    picks = shortlist(tracts, { size: 10, spacingMi: spacingEl.checked ? SPACING_MI : 0, desertsOnly: desertsEl.checked });
     listEl.innerHTML = picks.map(itemHtml).join('');
     drawMarkers();
     onChange();
@@ -64,6 +69,8 @@ function createRanking({ map, tracts, state, onSelect, onChange }) {
   for (const f of FACTORS) {
     document.getElementById(`w-${f}`).addEventListener('input', update);
   }
+  spacingEl.addEventListener('change', update);
+  desertsEl.addEventListener('change', update);
 
   // One listener on the list handles every pick, including ones drawn later.
   listEl.addEventListener('click', (e) => {
