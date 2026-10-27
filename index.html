@@ -98,7 +98,40 @@
             </section>
 
             <section class="panel" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
-                <h2>Test a recruitment plan</h2>
+                <h2>What would a plan buy?</h2>
+                <p class="note">Click a shaded tract to place a store. Drag to move it.</p>
+
+                <fieldset class="format-choice">
+                    <legend>Store type</legend>
+                    <label class="format">
+                        <input type="radio" name="format" value="full" checked>
+                        <span class="format-name">Full supermarket</span>
+                        <span class="format-meta">Large footprint, $3M incentive</span>
+                    </label>
+                    <label class="format">
+                        <input type="radio" name="format" value="small">
+                        <span class="format-name">Neighborhood grocer</span>
+                        <span class="format-meta">Smaller footprint, $1M incentive</span>
+                    </label>
+                </fieldset>
+
+                <div class="budget">
+                    <div class="budget-line">
+                        <span>Recruitment fund</span>
+                        <span class="budget-amount" id="budget-text">$0 of $10M committed</span>
+                    </div>
+                    <div class="budget-track" aria-hidden="true"><span class="budget-fill" id="budget-fill"></span></div>
+                </div>
+
+                <p class="plan-message" id="plan-message" role="status"></p>
+
+                <h3 class="sub-heading">Stores in this plan</h3>
+                <ol class="plan-stores" id="plan-stores"></ol>
+                <p class="note" id="plan-empty">No stores placed yet.</p>
+
+                <div class="plan-actions">
+                    <button type="button" class="btn" id="plan-clear">Clear</button>
+                </div>
             </section>
 
             <section class="panel profile" id="profile" aria-labelledby="profile-heading" aria-live="polite">

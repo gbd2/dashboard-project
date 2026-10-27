@@ -11,6 +11,12 @@ const SCORE_BREAKS = [20, 40, 60, 80];
 const SCORE_FILLS = ['#f2eef7', '#cbc9e2', '#9e9ac8', '#756bb1', '#54278f'];
 const UNSCORED = '#d9dbd6';
 
+const PLAN_FILLS = {
+  desert: FILLS.lila,
+  zone: SCORE_FILLS[2],
+  closed: UNSCORED,
+};
+
 const DEFINITIONS = {
   grocery: { lila: 'lila_grocery', la: 'la_grocery', far: 'far_grocery' },
   usda: { lila: 'lila_usda', la: 'la_usda', far: 'far_any' },
@@ -36,6 +42,10 @@ function tractStyle(p, state) {
     color: selected ? '#1a211d' : 'rgb(18 26 22 / 22%)',
     weight: selected ? 2.5 : 0.5,
   };
+  if (state.mode === 'plan') {
+    const fill = p.lila_grocery ? PLAN_FILLS.desert : (p.oz_eligible || p.oz_nominated ? PLAN_FILLS.zone : PLAN_FILLS.closed);
+    return { ...outline, fillColor: fill, fillOpacity: fill === PLAN_FILLS.closed ? 0.2 : 0.6 };
+  }
   if (state.mode === 'rank') {
     return { ...outline, fillColor: scoreFill(p.score), fillOpacity: 0.8 };
   }
@@ -44,6 +54,10 @@ function tractStyle(p, state) {
 }
 
 function tooltipFor(p, state) {
+  if (state.mode === 'plan') {
+    const open = p.lila_grocery || p.oz_eligible || p.oz_nominated;
+    return open ? `${p.hood}, tract ${p.name}` : `${p.hood}, tract ${p.name}<br>Not eligible for recruitment funds`;
+  }
   if (state.mode === 'rank') {
     const score = p.score == null ? 'not scored' : `score ${Math.round(p.score)}`;
     return `${p.hood}, tract ${p.name}<br>${score}`;
@@ -88,4 +102,4 @@ function summarize(tracts, definition) {
   return { count, residents, farTotal };
 }
 
-export { FILLS, SCORE_BREAKS, SCORE_FILLS, UNSCORED, createTractLayer, summarize, accessClass };
+export { FILLS, SCORE_BREAKS, SCORE_FILLS, UNSCORED, createTractLayer, summarize, accessClass, PLAN_FILLS };

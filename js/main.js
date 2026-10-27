@@ -5,6 +5,7 @@ import { renderHeadline } from './headline.js';
 import { int } from './format.js';
 import { showProfile } from './profile.js';
 import { createRanking } from './rank.js';
+import { createPlanner } from './plan.js';
 
 const state = {
   mode: 'access',
@@ -32,6 +33,8 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_L
 
 map.createPane('rankPane');
 map.getPane('rankPane').style.zIndex = 460;
+map.createPane('zonePane');
+map.getPane('zonePane').style.zIndex = 430;
 map.createPane('maskPane');
 map.getPane('maskPane').style.zIndex = 420;
 map.getPane('maskPane').style.pointerEvents = 'none';
@@ -94,6 +97,11 @@ function refreshProfile() {
   if (state.selected) { showProfile(tractsById.get(state.selected), state.definition); }
 }
 
+// Clicking a tract in the plan step places a store instead of selecting something.
+function onTractClick(geoid) {
+  if (state.mode !== 'plan') { selectTract(geoid); }
+}
+
 function selectTract(geoid) {
   state.selected = geoid;
   tractLayer.restyle();
@@ -126,6 +134,13 @@ const ranking = createRanking({
   },
 });
 
+const planner = createPlanner({ map, tracts });
+
+// A click that lands on a store dot still places a store.
+map.on('click', (e) => {
+  if (state.mode === 'plan') { planner.place(e.latlng); }
+});
+
 const tabs = [...document.querySelectorAll('[role="tab"]')];
 
 function setMode(tab) {
@@ -137,6 +152,7 @@ function setMode(tab) {
   }
   state.mode = { 'tab-rank': 'rank', 'tab-plan': 'plan' }[tab.id] || 'access';
   ranking.show(state.mode === 'rank');
+  planner.show(state.mode === 'plan');
   tractLayer.restyle();
   renderLegend(legendEl, state.mode);
 }
