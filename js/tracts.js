@@ -46,9 +46,9 @@ function tractStyle(p, state) {
 function tooltipFor(p, state) {
   if (state.mode === 'rank') {
     const score = p.score == null ? 'not scored' : `score ${Math.round(p.score)}`;
-    return `Tract ${p.name}<br>${score}`;
+    return `${p.hood}, tract ${p.name}<br>${score}`;
   }
-  return `Tract ${p.name}`;
+  return `${p.hood}, tract ${p.name}`;
 }
 
 function createTractLayer(tracts, state, onSelect) {

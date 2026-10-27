@@ -115,12 +115,6 @@ body {
   white-space: nowrap;
 }
 
-.note {
-  margin: 0.75rem 0 0;
-  color: #545e58;
-  font-size: 0.85rem;
-}
-
 .choice {
   display: flex;
   flex-direction: column;
@@ -431,4 +425,18 @@ body {
 
 .choice-row:has(input:checked) .choice-count {
   color: #c4441c;
+}
+
+.profile-tract {
+  margin: 0 0 0.75rem;
+  color: #545e58;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.pick-tract {
+  color: #545e58;
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
 }

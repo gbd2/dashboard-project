@@ -12,16 +12,16 @@ function weightShare(weights, factor) {
 }
 
 function itemHtml(p, i) {
-  const zone = p.oz_nominated ? 'zone nominee' : (p.oz_eligible ? 'zone eligible' : 'no zone');
+  const zone = p.oz_nominated ? 'zone nominee' : (p.oz_eligible ? 'zone eligible' : '');
   return `
     <li>
       <button class="pick" type="button" data-geoid="${p.geoid}">
         <span class="pick-head">
           <span class="pick-rank">${i + 1}</span>
-          <span class="pick-name">Tract ${p.name}</span>
+          <span class="pick-name">${p.hood} <span class="pick-tract">tract ${p.name}</span></span>
           <span class="pick-score"><span class="visually-hidden">Score </span>${Math.round(p.score)}</span>
         </span>
-        <span class="pick-facts">${int(p.far_grocery)} beyond reach, ${dollars(p.market)} unserved, ${zone}</span>
+        <span class="pick-facts">${int(p.far_grocery)} beyond reach, ${dollars(p.market)} unserved${zone ? `, ${zone}` : ''}</span>
       </button>
     </li>`;
 }

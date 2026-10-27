@@ -20,7 +20,8 @@ function renderProfile(p, definition) {
   const far = definition === 'usda' ? p.far_any : p.far_grocery;
   const farLabel = definition === 'usda' ? 'any SNAP store' : 'a grocery store';
   return `
-    <p class="profile-name">Census tract ${p.name} (${statusFor(p, definition)})</p>
+    <p class="profile-name">${p.hood}</p>
+    <p class="profile-tract">Census tract ${p.name} (${statusFor(p, definition)})</p>
     <dl class="facts">
       <dt>Residents</dt><dd>${int(p.pop)}</dd>
       <dt>Living over ${p.urban ? '1 mile' : '10 miles'} from ${farLabel}</dt><dd>${int(far)} (${pct(far, p.pop)})</dd>
