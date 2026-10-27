@@ -14,8 +14,8 @@ const state = {
 };
 
 const NOTES = {
-  grocery: "These are the store types USDA's own Large Retailer Access Map counts.",
-  usda: "This is how USDA's new 2025 map counts access. By that measure, a gas station is food access.",
+  grocery: '',
+  usda: 'By this measure, a gas station is food access.',
 };
 
 const map = L.map('map', {
@@ -102,7 +102,9 @@ function selectTract(geoid) {
 
 function updateHeadline() {
   renderHeadline(document.getElementById('headline'), headlineStats, state.definition);
-  document.getElementById('definition-note').textContent = NOTES[state.definition];
+  const note = document.getElementById('definition-note');
+  note.textContent = NOTES[state.definition];
+  note.hidden = !note.textContent;
 }
 
 for (const input of document.querySelectorAll('input[name="definition"]')) {

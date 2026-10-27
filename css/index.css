@@ -147,7 +147,9 @@ body {
 
 .choice-text {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
+  min-width: 0;
 }
 
 .choice-name {
@@ -410,4 +412,23 @@ body {
 .check input {
   margin: 0;
   accent-color: #54278f;
+}
+
+.choice-head {
+  margin: 0;
+  color: #545e58;
+  font-size: 0.72rem;
+  text-align: right;
+}
+
+.choice-count {
+  color: #545e58;
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.choice-row:has(input:checked) .choice-count {
+  color: #c4441c;
 }
