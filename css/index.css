@@ -736,3 +736,60 @@ body {
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
+
+.btn.primary {
+  border-color: #1f7a4d;
+  background-color: #1f7a4d;
+  color: #fff;
+}
+
+label.btn:has(+ input:focus-visible) {
+  outline: 2px solid #b86e00;
+  outline-offset: 2px;
+}
+
+.plan-actions input[type='text'] {
+  flex: 1 1 8rem;
+  min-width: 0;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid rgb(18 26 22 / 13%);
+  border-radius: 0.4rem;
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.compare-wrap {
+  overflow-x: auto;
+}
+
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.compare th,
+.compare td {
+  padding: 0.35rem 0.4rem;
+  border-bottom: 1px solid rgb(18 26 22 / 13%);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.compare thead th {
+  color: #545e58;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.compare .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}

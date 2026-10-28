@@ -1,14 +1,41 @@
-// Plan step: place stores within the recruitment fund and see what they buy.
+// Plan step: place stores within the recruitment fund, see what the impact is,
+// and save plans to compare.
 
 import { FORMATS, DEFAULT_ASSUMPTIONS, evaluate } from './model.js';
 import { findFeature, inFeature } from './geo.js';
-import { money } from './format.js';
+import { money, compact } from './format.js';
 import { renderResults } from './results.js';
 
 const REACH_METERS = 1609.344;
+const STORAGE_KEY = 'houston-grocery-gap-plans';
+const SUMMARY_FIELDS = ['stores', 'cost', 'newlyReached', 'cityRevenue', 'sales'];
 
-// Funds can go to food deserts (always by the grocery definition, so the
-// step 1 switch can't change where money is allowed) or Opportunity Zones.
+const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, (c) => ESCAPES[c]);
+}
+
+// Storage can be full / blocked (private windows, settings), so
+// failures fall back to temporary storage.
+function readStorage() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function writeStorage(plans) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(plans));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Funds can go to food deserts or Opportunity Zones.
 function isEligible(p) {
   return Boolean(p && (p.lila_grocery || p.oz_eligible || p.oz_nominated));
 }
@@ -18,10 +45,11 @@ function createPlanner({ map, tracts, blocks, stops, city }) {
   const tractRows = tracts.features.map((f) => f.properties);
   const inCity = (lon, lat) => city.features.some((f) => inFeature(lon, lat, f));
   const layer = L.layerGroup();
-  const assumptions = structuredClone(DEFAULT_ASSUMPTIONS);
+  let assumptions = structuredClone(DEFAULT_ASSUMPTIONS);
   let stores = [];
   let nextId = 1;
   let result = null;
+  let saved = readStorage();
 
   function say(message) {
     el('plan-message').textContent = message;
@@ -31,23 +59,29 @@ function createPlanner({ map, tracts, blocks, stops, city }) {
     return document.querySelector('input[name="format"]:checked').value;
   }
 
-  // Each input's id and how its value (in $M or %) sets the assumption.
+  // Input elements for the planning assumptions.
   const ASSUME_INPUTS = [
-    ['a-budget', (v) => { assumptions.budget = v * 1e6; }],
-    ['a-incentive-full', (v) => { assumptions.incentive.full = v * 1e6; }],
-    ['a-incentive-small', (v) => { assumptions.incentive.small = v * 1e6; }],
-    ['a-floor-full', (v) => { assumptions.floor.full = v * 1e6; }],
-    ['a-floor-small', (v) => { assumptions.floor.small = v * 1e6; }],
-    ['a-value-full', (v) => { assumptions.buildingValue.full = v * 1e6; }],
-    ['a-value-small', (v) => { assumptions.buildingValue.small = v * 1e6; }],
-    ['a-taxable', (v) => { assumptions.taxableShare = v / 100; }],
+    ['a-budget', (v) => { assumptions.budget = v * 1e6; }, () => assumptions.budget / 1e6],
+    ['a-incentive-full', (v) => { assumptions.incentive.full = v * 1e6; }, () => assumptions.incentive.full / 1e6],
+    ['a-incentive-small', (v) => { assumptions.incentive.small = v * 1e6; }, () => assumptions.incentive.small / 1e6],
+    ['a-floor-full', (v) => { assumptions.floor.full = v * 1e6; }, () => assumptions.floor.full / 1e6],
+    ['a-floor-small', (v) => { assumptions.floor.small = v * 1e6; }, () => assumptions.floor.small / 1e6],
+    ['a-value-full', (v) => { assumptions.buildingValue.full = v * 1e6; }, () => assumptions.buildingValue.full / 1e6],
+    ['a-value-small', (v) => { assumptions.buildingValue.small = v * 1e6; }, () => assumptions.buildingValue.small / 1e6],
+    ['a-taxable', (v) => { assumptions.taxableShare = v / 100; }, () => assumptions.taxableShare * 100],
   ];
 
-  // Blank or negative entries keep the last good value.
+  // Read the current values of the assumption inputs. 
   function readAssumptions() {
     for (const [id, set] of ASSUME_INPUTS) {
       const v = Number(el(id).value);
       if (el(id).value !== '' && Number.isFinite(v) && v >= 0) { set(v); }
+    }
+  }
+
+  function writeAssumptions() {
+    for (const [id, , get] of ASSUME_INPUTS) {
+      el(id).value = String(get());
     }
   }
 
@@ -146,11 +180,27 @@ function createPlanner({ map, tracts, blocks, stops, city }) {
       <li class="plan-store">
         ${pinHtml(s, i)}
         <span class="plan-store-main">
-          <span class="plan-store-name">${FORMATS[s.format].label}, ${s.hood}</span>
+          <span class="plan-store-name">${FORMATS[s.format].label}, ${escapeHtml(s.hood)}</span>
           <span class="plan-store-facts">${storeFacts(s)}</span>
         </span>
         <button type="button" class="btn small" data-remove="${s.id}" aria-label="Remove store ${i + 1}">Remove</button>
       </li>`).join('');
+  }
+
+  function drawSaved() {
+    el('compare-rows').innerHTML = saved.map((p, i) => `
+      <tr>
+        <th scope="row">${escapeHtml(p.name)}</th>
+        <td class="num">${p.summary.stores}</td>
+        <td class="num">${money(p.summary.cost)}</td>
+        <td class="num">${compact(p.summary.newlyReached)}</td>
+        <td class="num">${money(p.summary.cityRevenue)}</td>
+        <td class="row-actions">
+          <button type="button" class="btn small" data-load="${i}">Load</button>
+          <button type="button" class="btn small" data-delete="${i}" aria-label="Delete ${escapeHtml(p.name)}">Delete</button>
+        </td>
+      </tr>`).join('');
+    el('compare').hidden = saved.length === 0;
   }
 
   function update() {
@@ -167,8 +217,99 @@ function createPlanner({ map, tracts, blocks, stops, city }) {
 
   el('plan-clear').addEventListener('click', () => {
     stores = [];
+    el('plan-name').value = '';
     say('Cleared the plan.');
     update();
+  });
+
+  // ## Saving, loading, export and import
+
+  function summarize() {
+    return {
+      stores: result.stores.length,
+      cost: result.cost,
+      newlyReached: Math.round(result.newlyReached),
+      cityRevenue: Math.round(result.cityRevenue),
+      sales: Math.round(result.sales),
+    };
+  }
+
+  function load(p) {
+    stores = p.stores.map((s) => ({ ...s, id: nextId++ }));
+    assumptions = { ...structuredClone(DEFAULT_ASSUMPTIONS), ...structuredClone(p.assumptions) };
+    writeAssumptions();
+    el('plan-name').value = p.name;
+    update();
+  }
+
+  // Saving under a name that's already taken replaces that plan.
+  el('plan-save').addEventListener('click', () => {
+    if (!stores.length) {
+      say('Place at least one store before saving.');
+      return;
+    }
+    const name = el('plan-name').value.trim() || `Plan ${saved.length + 1}`;
+    const entry = {
+      name,
+      stores: stores.map(({ format, lat, lon, hood }) => ({ format, lat, lon, hood })),
+      assumptions: structuredClone(assumptions),
+      summary: summarize(),
+    };
+    const existing = saved.findIndex((p) => p.name === name);
+    if (existing >= 0) { saved[existing] = entry; } else { saved.push(entry); }
+    say(writeStorage(saved) ? `Saved "${name}".` : `Saved "${name}" for this visit only. This browser is blocking storage, so export it to keep it.`);
+    drawSaved();
+  });
+
+  el('compare-rows').addEventListener('click', (e) => {
+    const loadButton = e.target.closest('[data-load]');
+    const deleteButton = e.target.closest('[data-delete]');
+    if (loadButton) {
+      const p = saved[Number(loadButton.dataset.load)];
+      load(p);
+      say(`Loaded "${p.name}".`);
+    } else if (deleteButton) {
+      const [p] = saved.splice(Number(deleteButton.dataset.delete), 1);
+      writeStorage(saved);
+      say(`Deleted "${p.name}".`);
+      drawSaved();
+    }
+  });
+
+  el('plan-export').addEventListener('click', () => {
+    if (!saved.length) {
+      say('Save a plan before exporting.');
+      return;
+    }
+    const blob = new Blob([JSON.stringify({ app: 'houston-grocery-gap', plans: saved }, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'grocery-plans.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  // Keep only plans and stores that look right, and force the summary to
+  // numbers, since the table writes them straight into the page.
+  el('plan-import').addEventListener('change', async (e) => {
+    const [file] = e.target.files;
+    if (!file) { return; }
+    try {
+      const data = JSON.parse(await file.text());
+      const plans = (data.plans || []).filter((p) => p && p.name && Array.isArray(p.stores) && p.summary);
+      for (const p of plans) {
+        p.stores = p.stores.filter((s) => FORMATS[s.format] && Number.isFinite(s.lat) && Number.isFinite(s.lon));
+        p.summary = Object.fromEntries(SUMMARY_FIELDS.map((k) => [k, Number(p.summary[k]) || 0]));
+        const i = saved.findIndex((q) => q.name === p.name);
+        if (i >= 0) { saved[i] = p; } else { saved.push(p); }
+      }
+      writeStorage(saved);
+      drawSaved();
+      say(plans.length ? `Imported ${plans.length} plan${plans.length === 1 ? '' : 's'}.` : 'No plans found in that file.');
+    } catch {
+      say('That file could not be read. Choose a plans file exported from this tool.');
+    }
+    e.target.value = '';
   });
 
   for (const [id] of ASSUME_INPUTS) {
@@ -184,6 +325,7 @@ function createPlanner({ map, tracts, blocks, stops, city }) {
   }
 
   update();
+  drawSaved();
   return { place, show };
 }
 

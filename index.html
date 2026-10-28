@@ -130,7 +130,32 @@
                 <p class="note" id="plan-empty">No stores placed yet.</p>
 
                 <div class="plan-actions">
+                    <label class="visually-hidden" for="plan-name">Plan name</label>
+                    <input type="text" id="plan-name" placeholder="Name this plan" maxlength="40">
+                    <button type="button" class="btn primary" id="plan-save">Save</button>
                     <button type="button" class="btn" id="plan-clear">Clear</button>
+                </div>
+
+                <h3 class="sub-heading">Saved plans</h3>
+                <div class="compare-wrap" tabindex="0" role="region" aria-label="Saved plans compared">
+                    <table class="compare" id="compare">
+                        <thead>
+                            <tr>
+                                <th scope="col">Plan</th>
+                                <th scope="col" class="num">Stores</th>
+                                <th scope="col" class="num">Cost</th>
+                                <th scope="col" class="num">Newly in reach</th>
+                                <th scope="col" class="num">City revenue a year</th>
+                                <th scope="col"><span class="visually-hidden">Actions</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="compare-rows"></tbody>
+                    </table>
+                </div>
+                <div class="plan-actions">
+                    <button type="button" class="btn" id="plan-export">Export plans</button>
+                    <label class="btn" for="plan-import">Import plans</label>
+                    <input type="file" id="plan-import" accept="application/json,.json" class="visually-hidden">
                 </div>
 
                 <details class="assumptions">
