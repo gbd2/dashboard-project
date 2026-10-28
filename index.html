@@ -106,12 +106,12 @@
                     <label class="format">
                         <input type="radio" name="format" value="full" checked>
                         <span class="format-name">Full supermarket</span>
-                        <span class="format-meta">Large footprint, $3M incentive</span>
+                        <span class="format-meta">Large footprint, <span data-cost="full">$3M</span> incentive</span>
                     </label>
                     <label class="format">
                         <input type="radio" name="format" value="small">
                         <span class="format-name">Neighborhood grocer</span>
-                        <span class="format-meta">Smaller footprint, $1M incentive</span>
+                        <span class="format-meta">Smaller footprint, <span data-cost="small">$1M</span> incentive</span>
                     </label>
                 </fieldset>
 
@@ -124,7 +124,7 @@
                 </div>
 
                 <p class="plan-message" id="plan-message" role="status"></p>
-
+                <div class="results" id="plan-results"></div>
                 <h3 class="sub-heading">Stores in this plan</h3>
                 <ol class="plan-stores" id="plan-stores"></ol>
                 <p class="note" id="plan-empty">No stores placed yet.</p>
@@ -132,6 +132,29 @@
                 <div class="plan-actions">
                     <button type="button" class="btn" id="plan-clear">Clear</button>
                 </div>
+
+                <details class="assumptions">
+                <summary>Planning assumptions</summary>
+                    <div class="assume-grid">
+                        <label for="a-budget">Recruitment fund ($M)</label>
+                        <input type="number" id="a-budget" min="0" step="0.5" value="10">
+                        <label for="a-incentive-full">Incentive, full supermarket ($M)</label>
+                        <input type="number" id="a-incentive-full" min="0" step="0.25" value="3">
+                        <label for="a-incentive-small">Incentive, neighborhood grocer ($M)</label>
+                        <input type="number" id="a-incentive-small" min="0" step="0.25" value="1">
+                        <label for="a-floor-full">Sales needed to stay open, full ($M a year)</label>
+                        <input type="number" id="a-floor-full" min="0" step="1" value="15">
+                        <label for="a-floor-small">Sales needed to stay open, neighborhood ($M a year)</label>
+                        <input type="number" id="a-floor-small" min="0" step="1" value="5">
+                        <label for="a-value-full">Taxable building value, full ($M)</label>
+                        <input type="number" id="a-value-full" min="0" step="1" value="12">
+                        <label for="a-value-small">Taxable building value, neighborhood ($M)</label>
+                        <input type="number" id="a-value-small" min="0" step="1" value="4">
+                        <label for="a-taxable">Share of sales that is taxable (%)</label>
+                        <input type="number" id="a-taxable" min="0" max="100" step="5" value="25">
+                    </div>
+                    <p class="note">City revenue: 1% sales tax on new nonfood sales, plus property tax at $0.519190 per $100. Sales: a Huff model over stores within 5 miles.</p>
+                </details>
             </section>
 
             <section class="panel profile" id="profile" aria-labelledby="profile-heading" aria-live="polite">
@@ -187,7 +210,10 @@
                     <li><b>Grocery spending:</b> U.S. Bureau of Labor Statistics, Consumer Expenditure Survey 2024, food at home by income quintile, applied to each tract's households by median family income.</li>
                     <li><b>Opportunity Zones.</b> Office of the Texas Governor, Economic Development and Tourism, Opportunity Zone 2.0 nominated and eligible tracts, September 2026.</li>
                     <li><b>Neighborhoods:</b> City of Houston Planning and Development, Super Neighborhoods. Outside the city, U.S. Census Bureau 2020 incorporated and census-designated places.</li>
+                    <li><b>Tax rates:</b> City of Houston, tax year 2025 adopted property tax rate; Texas Comptroller, sales tax on grocery and convenience stores.</li>
+                    <li><b>Transit:</b> Metropolitan Transit Authority of Harris County, GTFS schedule data, August 30, 2026 service change.</li>
                     <li><i>A tract is low access when at least 500 people, or a third of its residents, live more than 1 mile from a store (10 miles in rural tracts), measured from 2020 census block centers. Low income comes from the USDA's definition.</i></li>
+                    <li><i>Plan sales come from a Huff model: each block's grocery spending is split among stores within 5 miles by store size over distance squared. Sales a new store takes from existing stores move around the city instead of adding to it, so only the remainder counts as new city sales tax. Groceries for home use are exempt from Texas sales tax, so only nonfood and prepared items are taxed.</i></li>
                 </ul>
             </details>
         </aside>

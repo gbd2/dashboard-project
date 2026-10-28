@@ -558,12 +558,6 @@ body {
   border-bottom: 1px solid rgb(18 26 22 / 13%);
 }
 
-.plan-store-name {
-  min-width: 0;
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
 .plan-pin {
   display: inline-grid;
   place-items: center;
@@ -580,6 +574,10 @@ body {
 
 .plan-pin.is-small {
   border-radius: 50%;
+}
+
+.plan-pin.is-weak {
+  background-color: #9b2c12;
 }
 
 .plan-marker {
@@ -622,4 +620,119 @@ body {
 .btn.small {
   padding: 0.2rem 0.5rem;
   font-size: 0.75rem;
+}
+
+.plan-store-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.plan-store-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.plan-store-facts {
+  color: #545e58;
+  font-size: 0.72rem;
+}
+
+.plan-store-facts .weak {
+  color: #9b2c12;
+  font-weight: 700;
+}
+
+.results {
+  margin-top: 0.75rem;
+}
+
+.lead-number {
+  margin: 0;
+  color: #1f7a4d;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.lead-label {
+  margin: 0.3rem 0 0;
+  font-weight: 600;
+}
+
+.lead-sub {
+  margin: 0.2rem 0 0;
+  color: #545e58;
+  font-size: 0.82rem;
+}
+
+.ledger-group {
+  margin: 1rem 0 0.3rem;
+  color: #545e58;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.payback {
+  margin: 0 0 0.6rem;
+  font-size: 0.88rem;
+}
+
+.payback b {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.ledger {
+  margin: 0;
+  border-top: 1px solid rgb(18 26 22 / 13%);
+}
+
+.ledger div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgb(18 26 22 / 13%);
+  font-size: 0.85rem;
+}
+
+.ledger dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.assumptions {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgb(18 26 22 / 13%);
+}
+
+.assumptions summary {
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.assume-grid {
+  display: grid;
+  grid-template-columns: 1fr 5rem;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+}
+
+.assume-grid input {
+  width: 100%;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid rgb(18 26 22 / 13%);
+  border-radius: 0.3rem;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
 }

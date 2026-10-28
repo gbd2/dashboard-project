@@ -28,4 +28,10 @@ function miles(n) {
   return n == null ? 'n/a' : `${n.toFixed(1)} mi`;
 }
 
-export { int, compact, dollars, pct, miles };
+function money(n) {
+  if (n >= 1e6) { return `$${(n / 1e6).toFixed(n >= 1e7 ? 0 : 1)}M`; }
+  if (n >= 1e3) { return `$${Math.round(n / 1e3)}k`; }
+  return `$${Math.round(n)}`;
+}
+
+export { int, compact, dollars, pct, miles, money };

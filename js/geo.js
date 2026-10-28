@@ -31,4 +31,4 @@ function findFeature(lon, lat, collection) {
   return collection.features.find((f) => inFeature(lon, lat, f)) || null;
 }
 
-export { findFeature };
+export { findFeature, inFeature };

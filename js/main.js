@@ -41,11 +41,14 @@ map.getPane('maskPane').style.pointerEvents = 'none';
 map.createPane('storePane');
 map.getPane('storePane').style.zIndex = 450;
 
-const [tracts, stores, mask, boundary] = await Promise.all([
+const [tracts, stores, mask, boundary, blocks, stops, city] = await Promise.all([
   fetch('data/tracts.geojson').then((r) => r.json()),
   fetch('data/stores.geojson').then((r) => r.json()),
   fetch('data/harris-mask.geojson').then((r) => r.json()),
   fetch('data/harris-boundary.geojson').then((r) => r.json()),
+  fetch('data/blocks.json').then((r) => r.json()),
+  fetch('data/stops.json').then((r) => r.json()),
+  fetch('data/houston-city.geojson').then((r) => r.json()),
 ]);
 const legendEl = document.getElementById('legend');
 const tractsById = new Map(tracts.features.map((f) => [f.properties.geoid, f.properties]));
@@ -134,7 +137,7 @@ const ranking = createRanking({
   },
 });
 
-const planner = createPlanner({ map, tracts });
+const planner = createPlanner({ map, tracts, blocks: blocks.rows, stops, city });
 
 // A click that lands on a store dot still places a store.
 map.on('click', (e) => {
