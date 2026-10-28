@@ -5,6 +5,7 @@ import { FORMATS, DEFAULT_ASSUMPTIONS, evaluate } from './model.js';
 import { findFeature, inFeature } from './geo.js';
 import { money, compact } from './format.js';
 import { renderResults } from './results.js';
+import { shortlist } from './scores.js';
 
 const REACH_METERS = 1609.344;
 const STORAGE_KEY = 'houston-grocery-gap-plans';
@@ -71,7 +72,7 @@ function createPlanner({ map, tracts, blocks, stops, city }) {
     ['a-taxable', (v) => { assumptions.taxableShare = v / 100; }, () => assumptions.taxableShare * 100],
   ];
 
-  // Read the current values of the assumption inputs. 
+  // Read the current values of the assumption inputs.
   function readAssumptions() {
     for (const [id, set] of ASSUME_INPUTS) {
       const v = Number(el(id).value);
@@ -89,9 +90,10 @@ function createPlanner({ map, tracts, blocks, stops, city }) {
     return stores.reduce((sum, s) => sum + assumptions.incentive[s.format], 0);
   }
 
-  function place(latlng) {
-    const tract = findFeature(latlng.lng, latlng.lat, tracts);
-    const p = tract && tract.properties;
+
+  function place(latlng, known = null) {
+    const tract = known ? null : findFeature(latlng.lng, latlng.lat, tracts);
+    const p = known || (tract && tract.properties);
     if (!isEligible(p)) {
       say("Recruitment funds can't go here. Choose a shaded tract.");
       return;
@@ -316,8 +318,25 @@ function createPlanner({ map, tracts, blocks, stops, city }) {
     el(id).addEventListener('change', update);
   }
 
+
+  const siteSelect = el('site-pick');
+
+  function refreshSites() {
+    const eligible = { features: tracts.features.filter((f) => isEligible(f.properties)) };
+    const sites = shortlist(eligible, { size: 40, spacingMi: 2 });
+    siteSelect.innerHTML = sites
+      .map((p) => `<option value="${p.geoid}">${escapeHtml(p.hood)}, tract ${p.name} (score ${Math.round(p.score)})</option>`)
+      .join('');
+  }
+
+  el('site-add').addEventListener('click', () => {
+    const p = tractRows.find((q) => q.geoid === siteSelect.value);
+    if (p) { place(L.latLng(p.lat, p.lon), p); }
+  });
+
   function show(visible) {
     if (visible) {
+      refreshSites();
       layer.addTo(map);
     } else {
       layer.remove();

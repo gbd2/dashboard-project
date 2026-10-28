@@ -13,7 +13,7 @@
 </head>
 <body>
     <main class="app-content">
-        <aside class="rail" aria-label="controls">
+        <aside class="rail" aria-label="Controls and tract details">
             <header class="rail-header">
                 <h1>Where should Houston's next grocery stores go?</h1>
             </header>
@@ -99,7 +99,7 @@
 
             <section class="panel" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
                 <h2>What would a plan buy?</h2>
-                <p class="note">Click a shaded tract to place a store. Drag to move it.</p>
+                    <p class="note">Click a shaded tract to place a store, or add one from the list below. Drag a store to move it.</p>
 
                 <fieldset class="format-choice">
                     <legend>Store type</legend>
@@ -114,6 +114,14 @@
                         <span class="format-meta">Smaller footprint, <span data-cost="small">$1M</span> incentive</span>
                     </label>
                 </fieldset>
+
+                <div class="site-picker">
+                    <label for="site-pick">Or add one at a top-ranked site</label>
+                    <div class="site-picker-row">
+                        <select id="site-pick"></select>
+                        <button type="button" class="btn nowrap" id="site-add">Add store</button>
+                    </div>
+                </div>
 
                 <div class="budget">
                     <div class="budget-line">
@@ -189,7 +197,7 @@
             </section>
 
             <section class="panel" aria-labelledby="layers-heading">
-                <h2>Map layers</h2>
+                <h2 id="layers-heading">Map layers</h2>
                 <ul class="layer-list">
                     <li>
                         <label class="layer-toggle">
@@ -243,7 +251,7 @@
             </details>
         </aside>
         <div class="map-wrap">
-            <div id="map" class="map"></div>
+            <div id="map" class="map" role="region" aria-label="Map of Harris County census tracts and food stores"></div>
             <div class="legend" id="legend" aria-hidden="true"></div>
             
         </div>  

@@ -1,7 +1,7 @@
 html,
 body {
-  height: 100%;
-  margin: 0;
+  background-color: #fff;
+  color: #1a211d;
 }
 
 .app-content {
@@ -112,6 +112,15 @@ body {
   height: 1px;
   overflow: hidden;
   clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 2px solid #b86e00;
+  outline-offset: 2px;
+}
+
+.nowrap {
   white-space: nowrap;
 }
 
@@ -251,11 +260,6 @@ body {
   background-color: #fff;
   color: #1a211d;
   box-shadow: 0 1px 2px rgb(18 26 22 / 15%);
-}
-
-.tab:focus-visible {
-  outline: 2px solid #b86e00;
-  outline-offset: 2px;
 }
 
 .weights {
@@ -497,6 +501,34 @@ body {
 .format-meta {
   color: #545e58;
   font-size: 0.75rem;
+}
+
+.site-picker {
+  margin-top: 0.75rem;
+}
+
+.site-picker label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.site-picker-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.site-picker select {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.35rem 0.4rem;
+  border: 1px solid rgb(18 26 22 / 13%);
+  border-radius: 0.4rem;
+  background-color: #fff;
+  color: #1a211d;
+  font: inherit;
+  font-size: 0.82rem;
 }
 
 .budget {
@@ -792,4 +824,10 @@ label.btn:has(+ input:focus-visible) {
   flex-wrap: wrap;
   gap: 0.25rem;
   justify-content: flex-end;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .budget-fill {
+    transition: none;
+  }
 }
