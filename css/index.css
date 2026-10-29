@@ -1,12 +1,21 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;
   margin: 0;
 }
 
+/* Without these, browsers and extensions that darken pages can leave dark text on a dark page. */
 body {
-  background-color: #fff;
+  background-color: #e9ebe6;
   color: #1a211d;
+  font-family: 'Public Sans', system-ui, sans-serif;
+  line-height: 1.5;
 }
 
 .app-content {
@@ -15,9 +24,47 @@ body {
   height: 100vh;
 }
 
+/* Positioned so hidden inputs sit inside the rail's scroll instead of stretching the page. */
 .rail {
+  position: relative;
+  min-width: 0;
   padding: 1.4rem 1.25rem;
   overflow-y: auto;
+  border-right: 1px solid rgb(18 26 22 / 13%);
+  background-color: #f8f9f6;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h2 {
+  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Sections stack as flat bands split by hairlines, not boxed cards. */
+.panel {
+  padding: 1.1rem 0;
+  border-top: 1px solid rgb(18 26 22 / 13%);
+}
+
+/* The tabs already draw a line above whichever step is showing. */
+.panel[role='tabpanel'] {
+  border-top: 0;
+}
+
+.note {
+  margin: 0.75rem 0 0;
+  color: #545e58;
+  font-size: 0.85rem;
 }
 
 .tip-type {
@@ -33,6 +80,11 @@ body {
 
 .map {
   height: 100%;
+  background-color: #e9ebe6;
+}
+
+.leaflet-tooltip {
+  font-family: 'Public Sans', system-ui, sans-serif;
 }
 
 .layer-list {
@@ -50,12 +102,18 @@ body {
   align-items: center;
   gap: 0.55rem;
   padding: 0.3rem 0.25rem;
+  border-radius: 0.35rem;
   font-size: 0.9rem;
   cursor: pointer;
 }
 
+.layer-toggle:hover {
+  background-color: #e9ebe6;
+}
+
 .layer-toggle input {
   margin: 0;
+  accent-color: #1f7a4d;
 }
 
 .layer-count {
@@ -238,22 +296,23 @@ body {
 .tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.25rem;
-  margin: 1rem 0;
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-  background-color: #e9ebe6;
+  margin-top: 0.6rem;
+  border-bottom: 1px solid rgb(18 26 22 / 13%);
 }
 
+/* The selected step is underlined, sitting on the line below the tabs. */
 .tab {
-  padding: 0.5rem 0.25rem;
+  margin-bottom: -1px;
+  padding: 0.6rem 0.25rem 0.55rem;
   border: 0;
-  border-radius: 0.35rem;
+  border-bottom: 2px solid transparent;
   background-color: transparent;
   color: #545e58;
   font: inherit;
   font-size: 0.85rem;
   font-weight: 600;
+  line-height: 1.2;
+  text-align: left;
   cursor: pointer;
 }
 
@@ -262,9 +321,8 @@ body {
 }
 
 .tab[aria-selected='true'] {
-  background-color: #fff;
+  border-bottom-color: #1a211d;
   color: #1a211d;
-  box-shadow: 0 1px 2px rgb(18 26 22 / 15%);
 }
 
 .weights {
@@ -285,7 +343,7 @@ body {
 }
 
 .weight-value {
-  color: #54278f;
+  color: #14525e;
   font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
 }
@@ -293,7 +351,7 @@ body {
 .weight input {
   width: 100%;
   margin: 0.2rem 0 0;
-  accent-color: #54278f;
+  accent-color: #14525e;
 }
 
 .weight-help {
@@ -308,12 +366,14 @@ body {
 }
 
 .shortlist {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
   margin: 0;
   padding: 0;
+  border-top: 1px solid rgb(18 26 22 / 13%);
   list-style: none;
+}
+
+.shortlist li {
+  border-bottom: 1px solid rgb(18 26 22 / 13%);
 }
 
 .pick {
@@ -321,17 +381,17 @@ body {
   flex-direction: column;
   gap: 0.2rem;
   width: 100%;
-  padding: 0.6rem 0.7rem;
-  border: 1px solid #d6dad3;
-  border-radius: 0.5rem;
-  background-color: #fff;
+  padding: 0.65rem 0.15rem;
+  border: 0;
+  background-color: transparent;
+  color: #1a211d;
   font: inherit;
   text-align: left;
   cursor: pointer;
 }
 
 .pick:hover {
-  border-color: #9e9ac8;
+  background-color: rgb(18 26 22 / 3%);
 }
 
 .pick-head {
@@ -353,7 +413,7 @@ body {
 }
 
 .pick-score {
-  color: #54278f;
+  color: #14525e;
   font-size: 1.05rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
@@ -414,7 +474,7 @@ body {
 
 .check input {
   margin: 0;
-  accent-color: #54278f;
+  accent-color: #14525e;
 }
 
 .choice-head {
@@ -719,6 +779,7 @@ body {
 .payback b {
   font-size: 1.2rem;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .ledger {

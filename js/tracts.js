@@ -5,10 +5,8 @@ const FILLS = {
   la: '#f2b48c',
   ok: '#f7f8f5',
 };
-
-// Site score breaks (0 to 100) and their fills, light to dark.
 const SCORE_BREAKS = [20, 40, 60, 80];
-const SCORE_FILLS = ['#f2eef7', '#cbc9e2', '#9e9ac8', '#756bb1', '#54278f'];
+const SCORE_FILLS = ['#eef4f3', '#c3dcdb', '#86b8b9', '#3f8589', '#14525e'];
 const UNSCORED = '#d9dbd6';
 
 const PLAN_FILLS = {
